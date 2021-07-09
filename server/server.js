@@ -3,6 +3,8 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet");
+const jwt = require('express-jwt');
+const jwksRsa = require('jwks-rsa');
 
 const app = express();
 const db = require("./db");
@@ -16,7 +18,6 @@ app.use(express.urlencoded({
 app.use(morgan("combined"));
 app.use(helmet());
 app.use(cors());
-
 
 
 // ROUTES!! //
@@ -67,6 +68,23 @@ app.get("/api/v1/chores/:id", async (req, res) => {
         console.log(err);
     }
 });
+
+// Setting up JWT for chore creation
+const checkJwt = jwt({
+    secret: jwksRsa.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: 'https://dev-wyn5w6yc.us.auth0.com/.well-known/jwks.json'
+    }),
+
+    // Audience and issuer verification.
+    audience: 'https://cb-api',
+    issuer: 'https://dev-wyn5w6yc.us.auth0.com/',
+    algorithms: ['RS256']
+});
+
+app.use(checkJwt);
 
 // CREATE A NEW CHORE //
 app.post("/api/v1/chores", async (req, res) => {
