@@ -19,8 +19,28 @@ app.use(morgan("combined"));
 app.use(helmet());
 app.use(cors());
 
+// AUTH MIDDLEWARE
+/*
+const { auth } = require('express-openid-connect');
 
-// ROUTES!! //
+const config = {
+    authRequired: false,
+    auth0Logout: true,
+    baseURL: 'http://localhost:4000/api/v1/',
+    clientID: 'balUsaPotM7jzw7utu7XibwoLAFxdPRW',
+    issuerBaseURL: 'https://dev-wyn5w6yc.us.auth0.com',
+    secret: 'QieXD0YnOupKhqxk_TwnC4RHSLV_5ohLCu6fF17hN68-_8zHOn6Ps_1ucX7Kct3o'
+};
+
+// automatically assigns routes for /login, /logout/, and /callback
+app.use(auth(config));
+
+// AUTH ROUTES!! //
+app.get('/api/v1/chores', (req, res) => {
+    res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out')
+});
+*/
+// CHORE ROUTES!! //
 
 app.get('/', (req, res, next) => {
     res.send("It's the fucking homepage dudes!");
