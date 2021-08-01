@@ -3,6 +3,8 @@ const { Pool } = require("pg");
 const db = require("../db");
 const bcrypt = require("bcrypt");
 const jwtGenerator = require("../utils/jwtGenerator");
+const validInfo = require("../middleware/validInfo");
+const authorization = require("../middleware/authorization");
 
 // GET ALL USERS ROUTE
 router.get('/', async (req, res) => {
@@ -25,7 +27,7 @@ router.get('/', async (req, res) => {
 });
 
 // REGISTER ROUTE
-router.post("/register", async (req, res) => {
+router.post("/register", validInfo, async (req, res) => {
     // Verify that email and username aren't already in use.
     try {
         const { name, email, password } = req.body;
@@ -52,7 +54,7 @@ router.post("/register", async (req, res) => {
 });
 
 // LOGIN ROUTE
-router.post('/login', async (req, res) => {
+router.post('/login', validInfo, async (req, res) => {
     try {
         // Destructure req.body
         const { email, password } = req.body;
@@ -77,6 +79,16 @@ router.post('/login', async (req, res) => {
         console.error(err.message);
         res.status(500).send("Server Error");
     }
-})
+});
+
+// 
+router.get("/is-verify", authorization, async (req, res) => {
+    try {
+        res.json(true);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");  
+    };
+});
 
 module.exports = router;

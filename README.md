@@ -1,0 +1,1 @@
+Auth resource: https://youtu.be/7UQBMb8ZpuE - The Stoic Programmers
