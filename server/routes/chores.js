@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const { Pool } = require("pg");
 const db = require("../db");
 
 // GET ALL CHORES //
