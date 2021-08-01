@@ -24,6 +24,7 @@ app.use(cors());
 // ROUTES!! //
 app.use("/api/v1/chores", require("./routes/chores"));
 app.use("/api/v1/auth", require("./routes/users"));
+app.use("/api/v1/dashboard", require("./routes/dashboard"));
 
 // SERVER!! //
 const port = process.env.PORT || 3001;

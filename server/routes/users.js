@@ -55,9 +55,9 @@ router.post("/register", validInfo, async (req, res) => {
 
 // LOGIN ROUTE
 router.post('/login', validInfo, async (req, res) => {
+    // Destructure req.body
+    const { email, password } = req.body;
     try {
-        // Destructure req.body
-        const { email, password } = req.body;
         // Check for user's existence
         const user = await db.query("SELECT * FROM users WHERE user_email = $1", [email]);
 
@@ -73,7 +73,7 @@ router.post('/login', validInfo, async (req, res) => {
         }
         // Give user jwt token
         const token = jwtGenerator(user.rows[0].user_id);
-        res.json({ token });
+        return res.json({ token });
         
     } catch (err) {
         console.error(err.message);
@@ -82,9 +82,9 @@ router.post('/login', validInfo, async (req, res) => {
 });
 
 // 
-router.get("/is-verify", authorization, async (req, res) => {
+router.get("/verify", authorization, async (req, res) => {
     try {
-        res.json(true);
+        return res.json(true);
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server Error");  
