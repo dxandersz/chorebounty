@@ -1,3 +1,4 @@
+const express = require("express");
 const router = require("express").Router();
 const { Pool } = require("pg");
 const db = require("../db");
@@ -29,10 +30,10 @@ router.get('/', async (req, res) => {
 // REGISTER ROUTE
 router.post("/register", validInfo, async (req, res) => {
     // Verify that email and username aren't already in use.
+    const { email, name, password } = req.body;
     try {
-        const { name, email, password } = req.body;
         const user = await db.query("SELECT * FROM users WHERE user_email = $1 OR user_name = $2", [email, name]);
-        if (user.rows.length !== 0) {
+        if (user.rows.length > 0) {
             return res.status(401).send("Email or username already taken.");
         };
 
@@ -45,8 +46,8 @@ router.post("/register", validInfo, async (req, res) => {
         // Register the user in the database
         const newUser = await db.query("INSERT INTO users (user_name, user_email, user_password) VALUES ($1, $2, $3) RETURNING *", [name, email, bcryptPassword]);        
         // Create a JWT token
-        const token = jwtGenerator(newUser.rows[0].user_id);
-        res.json({ token });
+        const jwtToken = jwtGenerator(newUser.rows[0].user_id);
+        return res.json({ jwtToken });
 
     } catch (err) {
         console.log(err);
