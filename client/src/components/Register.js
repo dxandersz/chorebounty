@@ -10,9 +10,10 @@ const Register = ({ setAuth }) => {
 
     const { email, password, name } = inputs;
 
-    const onChange = e =>
-        setInputs({ ...inputs, [e.target.name]: 
-        e.target.value });
+    const onChange = e => {
+        setInputs({ ...inputs, [e.target.name] 
+        : e.target.value });
+        };
 
     const onSubmitForm = async e => {
         e.preventDefault()
@@ -29,10 +30,13 @@ const Register = ({ setAuth }) => {
         );
 
         const parseRes = await response.json();
-        console.log(parseRes);
+        localStorage.setItem("token", parseRes.jwtToken)
+        setAuth(true);
 
+        console.log(parseRes);
         } catch (err) {
-            console.error(err.message)
+            console.error(err.message);
+            console.log('Not Authorized');
         }
     }
 
@@ -40,11 +44,11 @@ const Register = ({ setAuth }) => {
         <Fragment>
             <h1 className="text-center my-5">Register</h1>
             <form onSubmit={onSubmitForm}>
-                <input type="text" name="email" placeholder="email" className="form-control my-3" value={email} onChange={e => onChange(e)} />
+                <input type="email" name="email" placeholder="email" className="form-control my-3" value={email} onChange={e => onChange(e)} />
                 <input type="password" name="password" placeholder="password" className="form-control my-3" value={password} onChange={e => onChange(e)} />
                 <input type="text" name="name" placeholder="name" className="form-control my-3" value={name} onChange={e => onChange(e)} />
+                <button className="btn btn-success btn-block">Submit</button>
             </form>
-            <button className="btn btn-success btn-block">Submit</button>
         </Fragment>
     )
 };
