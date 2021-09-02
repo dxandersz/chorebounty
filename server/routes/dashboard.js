@@ -2,7 +2,7 @@ const router = require("express").Router();
 const db = require("../db");
 const authorization = require('../middleware/authorization');
 
-router.get('/', authorization, async(req, res) => {
+router.get("/", authorization, async(req, res) => {
     try {
         // req.user comes from authorization, contains jwt payload
         const user = await db.query("SELECT user_name, user_email FROM users WHERE user_id = $1", [req.user]);
